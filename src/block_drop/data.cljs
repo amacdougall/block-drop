@@ -1,7 +1,8 @@
 (ns block-drop.data
-  (:require [om.core :as om :include-macros true]
-            [cljs.core.async :refer [>! <! chan put! timeout alts!]]))
+  (:require [om.core :as om :include-macros true]))
 
+(defn timeout [f ms]
+  (.setTimeout js/window f ms))
 
 (def column-count 4)
 (def row-count 4)
@@ -20,7 +21,8 @@
 (defonce app-state
   (atom
     {:columns (blank-columns)
-     :on-deck (random-block)}))
+     :on-deck (random-block)
+     :game-over false}))
 
 ;; Returns a reference cursor for the app state. Pure convenience.
 (defn app-cursor []
@@ -31,11 +33,19 @@
   (>= (count column) row-count))
 
 ;; True if the user has filled every column.
-(defn game-over? []
+(defn blocks-full? []
   (empty? (remove column-full? (:columns @app-state))))
 
+;; True if the game over screen should be displayed.
+(defn game-over? []
+  (:game-over @app-state))
+
+(defn end-game []
+  (timeout #(om/update! (app-cursor) [:game-over] true) 2000))
+
 (defn reset []
-  (om/update! (app-cursor) [:columns] (blank-columns)))
+  (om/transact! (app-cursor) #(assoc % :columns (blank-columns)
+                                       :game-over false)))
 
 ;; Adds the supplied block to the supplied blocks cursor.
 (defn place-block [column]
@@ -43,5 +53,5 @@
     (let [block (:on-deck @app-state)
           next-block (random-block)]
       (om/transact! column #(conj % block))
-      (om/transact! (app-cursor) #(assoc % :on-deck next-block)))))
-
+      (om/transact! (app-cursor) #(assoc % :on-deck next-block))
+      (timeout #(when (blocks-full?) (end-game)) 2000))))
