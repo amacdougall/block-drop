@@ -30,7 +30,7 @@
     om/IRender
     (render [_]
       (html
-        [:div {:class (classes "block" (name (:color data)))}]))))
+        [:div {:class (classes "block animated fadeInDown" (name (:color data)))}]))))
 
 ;; A column of blocks in the puzzle grid.
 (defn- column [blocks owner]
@@ -62,13 +62,13 @@
     om/IRender
     (render [_]
       (html
-        [:div
+        [:div {:class "main"}
          [:h1 "BLOCK DROP"]
          (if (data/game-over?)
            [:div {:class "win-screen"}
             [:h2 "YOU WON THE GAME"]
             [:h3 "Play Again!?"]
-            [:button {:on-click data/reset} "OBVIOUSLY"]]
+            [:button {:class "reset-button" :on-click data/reset} "OBVIOUSLY"]]
            (om/build grid (:columns app)))
          [:div {:class "instructions"}
           "Click to drop blocks. ...that's basically it."]]))))

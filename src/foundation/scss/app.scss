@@ -2,6 +2,7 @@
 @import "foundation";
 @import "compass/css3/border-radius";
 @import "compass/css3/flexbox";
+@import "compass/css3/box-shadow";
 
 // NOTE: some defaults are defined in _settings.scss
 
@@ -10,47 +11,92 @@ $beta-color: blue;
 $gamma-color: green;
 $delta-color: yellow;
 
+/*
+$alpha-color: #5E8ECC;
+$beta-color: #195199;
+$gamma-color: #6E573D;
+$delta-color: #CC695E;
+/* */
+
+// currently, these widths and heights assume a 4x4 grid
+$grid-width: 68vw;
+$grid-height: 68vh;
+$block-width: 17vw;
+$block-height: 17vh;
+
+$block-corner-radius: 2vh;
+$block-bevel-lightness: -50%;
+$block-bevel-blur: 2vh;
+
+body {
+  font-family: Verdana, Helvetica, "sans-serif";
+}
+
+.main {
+  @include flexbox((
+    display: flex,
+    flex-direction: column,
+    align-items: center
+  ))
+}
+
 .grid {
-  width: 70vw;
-  height: 70vh;
+  width: $grid-width;
+  height: $grid-height;
   border: thin black solid;
+
+  margin-bottom: 2rem;
 
   @include flexbox((
     display: flex,
     flex-direction: row
-    // justify-content: center,
-    // align-items: center
-  ))
+  ));
+
+  @include border-radius($block-corner-radius);
 }
 
 .column {
-  border: thin gray solid;
-  width: 25%;
-  height: 100%;
-
-  background-color: silver;
+  width: $block-width;
+  height: $grid-height;
 
   @include flexbox((
     display: flex,
-    flex-direction: column
+    flex-direction: column-reverse,
+    justify-content: flex-start
   ))
 }
 
 .block {
-  width: 100%;
-  height: 0;
-  padding-bottom: 100%; // hax
+  width: $block-width;
+  height: $block-height;
+
+  @include border-radius($block-corner-radius);
+  // @include box-shadow(rgba(black, 0.4) 1px 1px 0, rgba(black, 0.2) 0 0 3px 1px inset);
 
   &.alpha {
     background-color: $alpha-color;
+    @include box-shadow(inset 0 0 $block-bevel-blur scale-color($alpha-color, $lightness: $block-bevel-lightness));
   }
   &.beta {
     background-color: $beta-color;
+    @include box-shadow(inset 0 0 $block-bevel-blur scale-color($beta-color, $lightness: $block-bevel-lightness));
   }
   &.gamma {
     background-color: $gamma-color;
+    @include box-shadow(inset 0 0 $block-bevel-blur scale-color($gamma-color, $lightness: $block-bevel-lightness));
   }
   &.delta {
     background-color: $delta-color;
+    @include box-shadow(inset 0 0 $block-bevel-blur scale-color($delta-color, $lightness: $block-bevel-lightness));
   }
+}
+
+.win-screen {
+  text-align: center;
+}
+
+.reset-button {
+  width: 50vw;
+  height: 10vh;
+  margin: 5rem;
 }
