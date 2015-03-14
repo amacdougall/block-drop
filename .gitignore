@@ -1,3 +1,4 @@
+# Compile artifacts
 /target
 /classes
 /checkouts
@@ -7,10 +8,12 @@ pom.xml.asc
 *.class
 /.lein-*
 /.nrepl-port
-/resources/public/js
-/resources/public/css
 /out
 /.repl
+
+# Generated deployable files
+/resources/public/js
+/resources/public/css/app.css
 
 # vim swapfiles
 *.sw[a-p]
